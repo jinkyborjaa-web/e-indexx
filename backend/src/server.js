@@ -9,26 +9,35 @@ const attendanceRoutes = require('./routes/attendance');
 
 const app = express();
 
-// Attach CORS headers to all responses, including error responses.
-app.use(cors());
-
+// Base whitelist (hardcoded)
 const allowedOrigins = [
-    'https://e-index-1.onrender.com',
-    'https://e-indexx-1.onrender.com',
-    'https://eindexx-1.onrender.com',
-    'https://eindexki.onrender.com',
-    'https://eindex-esrn.onrender.com',
+    'https://e-indexx-fl0m.onrender.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:5500',
     'http://127.0.0.1:5500'
 ];
 
+// Optional: add extra allowed origins via Render env var, comma-separated
+// e.g. FRONTEND_URL=https://another-site.com,https://yet-another.com
+if (process.env.FRONTEND_URL) {
+    process.env.FRONTEND_URL.split(',')
+        .map(url => url.trim())
+        .filter(Boolean)
+        .forEach(url => {
+            if (!allowedOrigins.includes(url)) {
+                allowedOrigins.push(url);
+            }
+        });
+}
+
 const corsOptions = {
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
+            console.error('Blocked by CORS - rejected origin:', origin);
+            console.error('Currently allowed origins:', allowedOrigins);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -118,4 +127,4 @@ function startServer(port) {
 }
 
 const PORT = parseInt(process.env.PORT, 10) || 3000;
-startServer(PORT); 
+startServer(PORT);
