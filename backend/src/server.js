@@ -12,6 +12,7 @@ const app = express();
 // Base whitelist (hardcoded)
 const allowedOrigins = [
     'https://e-indexx-fl0m.onrender.com',
+     'https://e-index-fl0n.onrender.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:5500',
